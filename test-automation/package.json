@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "cypress:open": "npx cypress open --browser chrome"
+    "cypress:open:e2e:prod": "npx cypress open --browser chrome --config-file cypress_prod.config.js",
+    "cypress:run:e2e:prod": "npx cypress run --config-file cypress_prod.config.js"
   },
   "author": "",
   "license": "ISC"
