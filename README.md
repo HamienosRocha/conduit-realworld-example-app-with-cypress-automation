@@ -81,6 +81,10 @@ To install the project on your computer, follow these steps:
    npm run sqlz -- db:create
    ```
 
+   ```bash
+   npm run sqlz -- db:migrate
+   ```
+
    > :information_source: The command `npm run sqlz` is an alias for `npx -w backend sequelize-cli`.  
    > Execute `npm run sqlz -- --help` to see more of `sequelize-cli` commands availables.
 
