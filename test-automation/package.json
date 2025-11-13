@@ -1,0 +1,11 @@
+{
+  "name": "test-automation",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "cypress:open": "npx cypress open --browser chrome"
+  },
+  "author": "",
+  "license": "ISC"
+}
