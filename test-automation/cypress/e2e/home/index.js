@@ -16,6 +16,13 @@ class Home {
       .should('have.attr', 'href', '#/register')
       .click();
   }
+
+  accessNewArticlePage() {
+    return cy.get(elements.newArticleButton)
+      .should('have.attr', 'href', '#/editor')
+      .click();
+
+  }
 }
 
 export default new Home();

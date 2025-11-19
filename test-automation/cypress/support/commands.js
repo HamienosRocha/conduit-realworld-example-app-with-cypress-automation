@@ -1,29 +1,87 @@
-// ***********************************************
-// This example commands.js shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+import { ELEMENTS as loginElements } from '../e2e/login/elements';
+import { ELEMENTS as editorElements } from '../e2e/editor/elements';
+import { faker } from "@faker-js/faker";
 
 Cypress.Commands.add('interceptLogin', () => {
   cy.intercept('POST', '/api/users/login');
+});
+
+Cypress.Commands.add('loginUI', (email, password) => {
+  cy.get(loginElements.emailInput)
+    .type(email)
+    .should('have.attr', 'type', 'email')
+    .and('have.attr', 'placeholder', 'Email')
+    .and('have.prop', 'required');
+
+  cy.get(loginElements.passwordInput)
+    .type(password)
+    .should('have.attr', 'type', 'password')
+    .and('have.attr', 'placeholder', 'Password')
+    .and('have.attr', 'required');
+
+  cy.intercept('POST', 'api/users/login').as('postLogin');
+
+  cy.get(loginElements.loginButton)
+    .contains(loginElements.loginAccessLinkText)
+    .click();
+
+  cy.wait('@postLogin').its('response.statusCode').should('eq', 200);
+});
+
+Cypress.Commands.add('genererateArticle', () => {
+  return {
+    title: faker.lorem.sentence(2),
+    description: faker.lorem.sentence(5),
+    text: faker.lorem.paragraph(),
+    tag: faker.lorem.word()
+  };
+});
+
+Cypress.Commands.add('fillArticle', (body) => {
+
+  cy.get(editorElements.inputTitleArticle).type(body.title)
+    .should('be.visible')
+    .and('have.attr', 'required');
+
+  cy.get(editorElements.inputDescriptionArticle).type(body.description)
+    .should('be.visible')
+    .and('have.attr', 'required');
+
+  cy.get(editorElements.inputTextArticle).type(body.text)
+    .should('be.visible')
+    .and('have.attr', 'required');
+
+  cy.get(editorElements.inputTagArticle).type(body.tag)
+    .should('be.visible')
+    .and('not.have.attr', 'required');
+});
+
+Cypress.Commands.add('publishArticle', () => {
+  return cy.get(editorElements.btnPublish)
+    .should('be.visible')
+    .should('have.attr', 'type', 'submit')
+    .click();
+});
+
+Cypress.Commands.add('loginAPI', (email, password) => {
+  cy.session([email, password], () => {
+    cy.request({
+      method: 'POST',
+      url: '/api/users/login',
+      body: { user: { email, password } }
+    }).then((response) => {
+      expect(response.status).to.be.eq(200);
+
+      const storage = {
+        headers: {
+          'Authorization': `Token ${response.body.user.token}`,
+        },
+        isAuth: true,
+        loggedUser: response.body.user
+      };
+
+      window.localStorage.setItem('loggedUser', JSON.stringify(storage));
+    });
+
+  }).as('postLogin');
 });
