@@ -1,3 +1,4 @@
 export const ELEMENTS = {
-  loginAccessLinkText: 'Login'
+  loginAccessLinkText: 'Login',
+  registerButton: 'a[href="#/register"]',
 };

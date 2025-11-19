@@ -10,6 +10,12 @@ class Home {
       .should('have.attr', 'href', '#/login')
       .click();
   }
+
+  accessRegisterPage() {
+    return cy.get(elements.registerButton)
+      .should('have.attr', 'href', '#/register')
+      .click();
+  }
 }
 
 export default new Home();
