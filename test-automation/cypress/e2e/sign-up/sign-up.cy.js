@@ -5,7 +5,7 @@ import login from "../login";
 
 const credentials = Cypress.env('default_auth');
 
-describe.only('Sign Up Feature', () => {
+describe('Sign Up Feature', () => {
   beforeEach(() => {
     home.accessHomePage();
   });

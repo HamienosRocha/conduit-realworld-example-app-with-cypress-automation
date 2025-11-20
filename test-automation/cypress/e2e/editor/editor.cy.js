@@ -67,7 +67,7 @@ describe('Manage Articles - Version with custom commands', () => {
   });
 });
 
-describe.only('Manage Articles - Version with custom commands and login via API', () => {
+describe('Manage Articles - Version with custom commands and login via API', () => {
   beforeEach(() => {
     cy.loginAPI(credentials.email, credentials.password);
     cy.visit('#/editor');
@@ -91,7 +91,7 @@ describe.only('Manage Articles - Version with custom commands and login via API'
     });
   });
 
-  it.only('Delete article posted by user', () => {
+  it('Delete article posted by user', () => {
     const loggedUser = JSON.parse(window.localStorage.getItem('loggedUser') || '{}');
     cy.createArticleAPI().then(article => {
       cy.postArticleAPI(article, loggedUser);

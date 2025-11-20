@@ -55,7 +55,7 @@ describe('Login feature using Page Object Model', () => {
     login.logout();
   });
 
-  it.only('login with valid credentials from multiple users', () => {
+  it('login with valid credentials from multiple users', () => {
     cy.intercept('POST', 'api/users/login').as('postLogin');
     cy.intercept('GET', 'api/users').as('getUser');
 
