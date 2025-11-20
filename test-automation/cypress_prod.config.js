@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 module.exports = {
+  projectId: 'jigrjw',
   e2e: {
     baseUrl: 'https://conduit-realworld-example-app.fly.dev',
     setupNodeEvents(on, config) {

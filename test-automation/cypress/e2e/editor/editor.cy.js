@@ -90,4 +90,22 @@ describe.only('Manage Articles - Version with custom commands and login via API'
       });
     });
   });
+
+  it.only('Delete article posted by user', () => {
+    const loggedUser = JSON.parse(window.localStorage.getItem('loggedUser') || '{}');
+    cy.createArticleAPI().then(article => {
+      cy.postArticleAPI(article, loggedUser);
+    });
+
+    cy.accessProfile();
+    cy.accessRecentArticle();
+
+    cy.intercept('DELETE', 'api/articles/**').as('deleteArticle');
+
+    cy.contains('Delete Article').click().then(() => {
+      cy.wait('@deleteArticle').then(response => {
+        expect(response.response.statusCode).to.be.eq(200);
+      });
+    });
+  });
 });

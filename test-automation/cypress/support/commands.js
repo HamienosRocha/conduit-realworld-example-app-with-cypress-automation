@@ -1,5 +1,6 @@
 import { ELEMENTS as loginElements } from '../e2e/login/elements';
 import { ELEMENTS as editorElements } from '../e2e/editor/elements';
+import { ELEMENTS as headerElements } from '../e2e/header/elements';
 import { faker } from "@faker-js/faker";
 
 Cypress.Commands.add('interceptLogin', () => {
@@ -34,6 +35,15 @@ Cypress.Commands.add('genererateArticle', () => {
     description: faker.lorem.sentence(5),
     text: faker.lorem.paragraph(),
     tag: faker.lorem.word()
+  };
+});
+
+Cypress.Commands.add('createArticleAPI', () => {
+  return {
+    body: faker.lorem.sentence(2),
+    description: faker.lorem.sentence(5),
+    title: faker.lorem.sentence(3),
+    tagList: ''
   };
 });
 
@@ -84,4 +94,31 @@ Cypress.Commands.add('loginAPI', (email, password) => {
     });
 
   }).as('postLogin');
+});
+
+Cypress.Commands.add('postArticleAPI', (article, loggedUser) => {
+  cy.request({
+    method: 'POST',
+    url: '/api/articles',
+    headers: loggedUser.headers,
+    body: { article }
+  })
+    .then(response => {
+      expect(response.status).to.be.eq(201);
+    })
+    .as('article');
+});
+
+Cypress.Commands.add('accessProfile', () => {
+  cy.get(headerElements.profileIcon).click().then(() => {
+    cy.get(headerElements.profileMenu).children().eq(0).click();
+  });
+});
+
+Cypress.Commands.add('accessRecentArticle', () => {
+  cy.get('div.row').find('div.article-preview').eq(0).find('h1').click().then(() => {
+    cy.get('@article').then((list) => {
+      cy.contains(list.body.article.title);
+    });
+  });
 });
